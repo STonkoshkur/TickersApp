@@ -21,6 +21,7 @@ import Routes from 'src/navigation/routes';
 
 // Hooks
 import { useQuery } from 'react-query';
+import useSymbolAggregatedStocks from 'src/hooks/entities/useSymbolAggregatedStocks';
 
 // Services
 import API from 'src/services/API';
@@ -72,9 +73,16 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
     { key: 'phone', value: tickerCompany?.phone ?? '-' },
   ];
 
+  // Get data for stocks chart
+  const { symbolStocksAggregatesForChart, isValueGrownPerPeriod } =
+    useSymbolAggregatedStocks(companySymbol);
+
+  const chartColor = isValueGrownPerPeriod
+    ? Colors.Emerald
+    : Colors.FireEngineRed;
+
   // TODO: will be removed after API services implementation
   const isSuccessedStocks = Math.random() < 0.5;
-  const chartData = new Array(30).fill(0).map(() => Math.random() * 100);
   const stockColor = isSuccessedStocks ? Colors.Emerald : Colors.FireEngineRed;
 
   const handleRelatedStockPress = (relatedSymbol: string) => () => {
@@ -88,14 +96,15 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
       <ScrollView contentContainerStyle={styles.contentContainer}>
         {/* Header section */}
         <View style={styles.companyTitleRow}>
-          <Typography variant="title2" weight="medium">
+          <Typography
+            variant="title2"
+            weight="medium"
+            style={styles.companyTitleLabel}>
             {tickerCompany?.symbol ?? companySymbol}
           </Typography>
 
           {tickerCompany?.name && (
-            <Typography variant="title3" style={styles.companyTitleLabel}>
-              {tickerCompany.name}
-            </Typography>
+            <Typography variant="title3">{tickerCompany.name}</Typography>
           )}
         </View>
 
@@ -123,9 +132,9 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 
         {/* Chart section */}
         <LineChart
-          data={chartData}
-          color={stockColor}
-          height={100}
+          data={symbolStocksAggregatesForChart}
+          color={chartColor}
+          height={120}
           width={Dimensions.get('window').width - Measurements.huge}
         />
 
@@ -219,9 +228,10 @@ const styles = StyleSheet.create({
   companyTitleRow: {
     ...GeneralStyles.horisontalAlign,
     alignItems: 'center',
+    flexWrap: 'wrap',
   },
   companyTitleLabel: {
-    marginLeft: Measurements.medium,
+    marginRight: Measurements.medium,
   },
   priceRow: {
     marginTop: Measurements.medium,

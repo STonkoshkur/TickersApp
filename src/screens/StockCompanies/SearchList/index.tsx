@@ -20,7 +20,7 @@ import { StockCompaniesStackParamList } from 'src/navigation/stacks/StockCompani
 import Routes from 'src/navigation/routes';
 
 // Hooks
-import useDebounce from 'src/hooks/useDebounce';
+import useDebounce from 'src/hooks/utils/useDebounce';
 import { useQuery } from 'react-query';
 
 // Services
