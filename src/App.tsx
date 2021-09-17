@@ -13,8 +13,17 @@ import React, { FC } from 'react';
 // Navigation
 import NavigationContainer from 'src/navigation/container';
 
+// Services
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
+
 const App: FC = () => {
-  return <NavigationContainer />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer />
+    </QueryClientProvider>
+  );
 };
 
 export default App;
