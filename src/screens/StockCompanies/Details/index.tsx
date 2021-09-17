@@ -19,6 +19,12 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { StockCompaniesStackParamList } from 'src/navigation/stacks/StockCompanies';
 import Routes from 'src/navigation/routes';
 
+// Hooks
+import { useQuery } from 'react-query';
+
+// Services
+import API from 'src/services/API';
+
 // Layout
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
 
@@ -36,22 +42,39 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 }) => {
   const { companySymbol } = route.params;
 
-  // TODO: will be removed after API services implementation
-  const similar = ['TTM', 'NIO', 'TST', 'NKLA'];
-  const companyTags = ['Automotive', 'Consumer'];
-  const isSuccessedStocks = Math.random() < 0.5;
-  const chartData = new Array(30).fill(0).map(() => Math.random() * 100);
+  const { data: tickerCompany } = useQuery(
+    ['company', companySymbol],
+    () => API.tickers.getTickerDetails(companySymbol),
+    {
+      staleTime: 5 * 60 * 1000, // 5 min
+    },
+  );
+
+  // Mapped company data to display
   const aboutCompanyValues = [
-    { label: 'Sector', value: 'Company sector' },
-    { label: 'Industry', value: 'Company industry' },
-    { label: 'CEO', value: 'Company CEO Full Name' },
-    { label: 'Employees', value: formatNumber(5325) },
+    { label: 'Sector', value: tickerCompany?.sector ?? '-' },
+    { label: 'Industry', value: tickerCompany?.industry ?? '-' },
+    { label: 'CEO', value: tickerCompany?.ceo ?? '-' },
+    {
+      label: 'Employees',
+      value: tickerCompany?.employees
+        ? formatNumber(tickerCompany?.employees)
+        : '-',
+    },
   ];
   const companyContactsValues = [
-    { key: 'address', value: '1 Infinite Loop Cupertino CA, 95014, USA' },
-    { key: 'phone', value: '+1 408 996-1010' },
+    {
+      key: 'address',
+      value: tickerCompany
+        ? [tickerCompany.hq_address, tickerCompany.hq_country].join(', ')
+        : '-',
+    },
+    { key: 'phone', value: tickerCompany?.phone ?? '-' },
   ];
 
+  // TODO: will be removed after API services implementation
+  const isSuccessedStocks = Math.random() < 0.5;
+  const chartData = new Array(30).fill(0).map(() => Math.random() * 100);
   const stockColor = isSuccessedStocks ? Colors.Emerald : Colors.FireEngineRed;
 
   const handleRelatedStockPress = (relatedSymbol: string) => () => {
@@ -66,12 +89,16 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         {/* Header section */}
         <View style={styles.companyTitleRow}>
           <Typography variant="title2" weight="medium">
-            {companySymbol}
+            {tickerCompany?.symbol ?? companySymbol}
           </Typography>
-          <Typography variant="title3" style={styles.companyTitleLabel}>
-            Company name
-          </Typography>
+
+          {tickerCompany?.name && (
+            <Typography variant="title3" style={styles.companyTitleLabel}>
+              {tickerCompany.name}
+            </Typography>
+          )}
         </View>
+
         <Typography variant="title1" weight="medium" style={styles.priceRow}>
           {formatNumber(1245.345, { currency: 'usd' })}
         </Typography>
@@ -104,7 +131,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 
         {/* General company info section */}
         <Section
-          title={`About ${companySymbol.toUpperCase()}`}
+          title={`About ${tickerCompany?.symbol ?? companySymbol}`}
           contentContainerStyle={GeneralStyles.horisontalAlign}>
           <View style={styles.columnX2}>
             {aboutCompanyValues.map(({ label, value }) => (
@@ -139,42 +166,46 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
             variant="callout"
             weight="medium"
             style={styles.descriptionBodyText}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {tickerCompany?.description || '-'}
           </Typography>
         </Section>
 
         {/* Tags section */}
-        <Section
-          title="Tags"
-          contentContainerStyle={GeneralStyles.horisontalAlign}>
-          {companyTags.map((tag, index) => (
-            <Chip
-              key={tag}
-              color={index % 2 ? Colors.PictonBlue : Colors.DarkOrchid}
-              disabled>
-              {tag}
-            </Chip>
-          ))}
-        </Section>
+        {tickerCompany?.tags && (
+          <Section
+            title="Tags"
+            contentContainerStyle={[
+              GeneralStyles.horisontalAlign,
+              GeneralStyles.flexWrap,
+            ]}>
+            {tickerCompany.tags.map((tag, index) => (
+              <Chip
+                key={tag}
+                color={index % 2 ? Colors.PictonBlue : Colors.DarkOrchid}
+                disabled>
+                {tag}
+              </Chip>
+            ))}
+          </Section>
+        )}
 
         {/* Related Stocks section */}
-        <Section
-          title="Related Stocks"
-          contentContainerStyle={GeneralStyles.horisontalAlign}>
-          {similar.map((similarSymbol, index) => (
-            <Chip
-              color={index % 2 ? Colors.Emerald : Colors.Cinnabar}
-              onPress={handleRelatedStockPress(similarSymbol)}>
-              {similarSymbol}
-            </Chip>
-          ))}
-        </Section>
+        {tickerCompany?.similar && (
+          <Section
+            title="Related Stocks"
+            contentContainerStyle={[
+              GeneralStyles.horisontalAlign,
+              GeneralStyles.flexWrap,
+            ]}>
+            {tickerCompany.similar.map((similarSymbol, index) => (
+              <Chip
+                color={index % 2 ? Colors.Emerald : Colors.Cinnabar}
+                onPress={handleRelatedStockPress(similarSymbol)}>
+                {similarSymbol}
+              </Chip>
+            ))}
+          </Section>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

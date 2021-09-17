@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -12,11 +12,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchBar from 'src/components/SearchBar';
 import Typography from 'src/components/Typography';
 import AppHeader from 'src/components/Navigation/AppHeader';
+import ResultsNotFound from './components/ResultsNotFound';
 
 // Navigation
 import { StackScreenProps } from '@react-navigation/stack';
 import { StockCompaniesStackParamList } from 'src/navigation/stacks/StockCompanies';
 import Routes from 'src/navigation/routes';
+
+// Hooks
+import useDebounce from 'src/hooks/useDebounce';
+import { useQuery } from 'react-query';
+
+// Services
+import API from 'src/services/API';
+
+// Entities
+import { Ticker } from 'src/entities/ticker';
 
 // Layout
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
@@ -29,39 +40,40 @@ export type StockCompaniesSearchListProps = StackScreenProps<
 const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
   navigation,
 }) => {
-  // TODO: will be removed after API service connect
-  const stockCompaniesList = [
-    { symbol: 'TSLA', name: 'Tesle Inc' },
-    { symbol: 'AAPL', name: 'Apple Inc' },
-    { symbol: 'GGLE', name: 'Google' },
-    { symbol: 'UBER', name: 'Uber Tech' },
-    { symbol: 'MU', name: 'Micron Technology' },
-  ];
+  // Search input values
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 350);
 
-  const handleSearchedTickerPress = (companySymbol: string) => () => {
-    navigation.push(Routes.StockCompanyDetails, {
-      companySymbol,
-    });
-  };
+  const { data: paginatedTickers } = useQuery(
+    ['search/tickers', debouncedSearch],
+    () => API.tickers.getUsStockTickers(debouncedSearch ?? ''),
+    {
+      staleTime: 1000 * 60 * 60 * 1, // 1 hour
+      enabled: !!debouncedSearch,
+    },
+  );
 
-  // FIXME: add types after API service connect
-  const renderSearchedItem = ({
-    item,
-  }: ListRenderItemInfo<{ symbol: string; name: string }>) => {
-    const { symbol, name } = item;
+  const tickersList = paginatedTickers?.results ?? [];
+
+  const renderSearchedItem = ({ item }: ListRenderItemInfo<Ticker>) => {
+    const { ticker: tickerSymbol, name } = item;
 
     return (
       <TouchableHighlight
         style={styles.searchRowWrapper}
         underlayColor={Colors.BlumineTransparent}
         activeOpacity={0.9}
-        onPress={handleSearchedTickerPress(symbol)}>
+        onPress={() => {
+          navigation.push(Routes.StockCompanyDetails, {
+            companySymbol: tickerSymbol,
+          });
+        }}>
         {/* TouchableHighlight must includes only one child */}
         <>
           {/* Ticker Symbol column */}
           <View style={styles.tickerSymbol}>
             <Typography variant="title3" weight="medium">
-              {symbol}
+              {tickerSymbol}
             </Typography>
           </View>
 
@@ -84,14 +96,16 @@ const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
           autoCorrect={false}
           spellCheck={false}
           icon="chevron-back"
-          onIconPress={navigation.canGoBack() ? navigation.goBack : undefined}
           placeholder="Search symbols or companies"
+          onIconPress={navigation.canGoBack() ? navigation.goBack : undefined}
+          onChangeText={setSearch}
         />
       </AppHeader>
 
       <FlatList
-        data={stockCompaniesList}
+        data={tickersList}
         renderItem={renderSearchedItem}
+        ListEmptyComponent={<ResultsNotFound />}
         contentContainerStyle={styles.contentContainer}
       />
     </SafeAreaView>
@@ -107,8 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: Measurements.double,
-    paddingLeft: 58,
-    paddingRight: Measurements.huge,
+    paddingHorizontal: Measurements.huge,
   },
   tickerSymbol: {
     width: 75,
