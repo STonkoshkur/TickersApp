@@ -5,6 +5,7 @@ import API from 'src/services/API';
 
 // Utils
 import { getISOFormatedDate, addMonth } from 'src/utils/dateTime';
+import { percentageDiff } from 'src/utils/persontage';
 
 export const GET_SYMBOL_AGGREGATED_STOCKS_CACHE_KEY = 'symbolStocksAggregated';
 
@@ -30,10 +31,13 @@ export const useSymbolAggregatedStocks = (stocksTicker: string) => {
     },
   );
 
-  const symbolStocksAggregatesForChart =
-    symbolStocksAggregates?.results?.map(({ c }) => c) ?? [];
+  const symbolAggregatesStocksResults = symbolStocksAggregates?.results ?? [];
 
-  // Value is grown when last stock value is greater than first stock value for selected period
+  const symbolStocksAggregatesForChart = symbolAggregatesStocksResults.map(
+    ({ c }) => c,
+  );
+
+  // Value is grown when last trade value is greater than first trade value for selected period
   const isValueGrownPerPeriod =
     symbolStocksAggregatesForChart?.length >= 2
       ? symbolStocksAggregatesForChart[
@@ -41,12 +45,29 @@ export const useSymbolAggregatedStocks = (stocksTicker: string) => {
         ] >= symbolStocksAggregatesForChart[0]
       : true;
 
+  const lastOpenCloseResult =
+    symbolAggregatesStocksResults.length >= 1
+      ? symbolAggregatesStocksResults[symbolAggregatesStocksResults.length - 1]
+      : null;
+
+  const lastOpenCloseValues = {
+    openPrice: lastOpenCloseResult?.o,
+    closePrice: lastOpenCloseResult?.c,
+    priceChange: lastOpenCloseResult
+      ? lastOpenCloseResult.c - lastOpenCloseResult.o
+      : null,
+    persontagePriceChange: lastOpenCloseResult
+      ? percentageDiff(lastOpenCloseResult.o, lastOpenCloseResult.c)
+      : null,
+  };
+
   return {
     symbolStocksAggregates,
     symbolStocksAggregatesForChart,
     isValueGrownPerPeriod,
     isLoadingSymbolStocksAggregates,
     refetchSymbolStocksAggregates,
+    lastOpenCloseValues,
   };
 };
 

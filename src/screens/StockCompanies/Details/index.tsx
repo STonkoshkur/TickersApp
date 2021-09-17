@@ -74,16 +74,23 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
   ];
 
   // Get data for stocks chart
-  const { symbolStocksAggregatesForChart, isValueGrownPerPeriod } =
-    useSymbolAggregatedStocks(companySymbol);
+  const {
+    symbolStocksAggregatesForChart,
+    isValueGrownPerPeriod,
+    lastOpenCloseValues,
+  } = useSymbolAggregatedStocks(companySymbol);
+
+  const isLastClosePriceGrown = lastOpenCloseValues?.priceChange
+    ? lastOpenCloseValues.priceChange >= 0
+    : false;
+
+  const stockColor = isLastClosePriceGrown
+    ? Colors.Emerald
+    : Colors.FireEngineRed;
 
   const chartColor = isValueGrownPerPeriod
     ? Colors.Emerald
     : Colors.FireEngineRed;
-
-  // TODO: will be removed after API services implementation
-  const isSuccessedStocks = Math.random() < 0.5;
-  const stockColor = isSuccessedStocks ? Colors.Emerald : Colors.FireEngineRed;
 
   const handleRelatedStockPress = (relatedSymbol: string) => () => {
     navigation.push(Routes.StockCompanyDetails, {
@@ -109,25 +116,33 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         </View>
 
         <Typography variant="title1" weight="medium" style={styles.priceRow}>
-          {formatNumber(1245.345, { currency: 'usd' })}
+          {lastOpenCloseValues?.closePrice
+            ? formatNumber(lastOpenCloseValues.closePrice, { currency: 'usd' })
+            : '-'}
         </Typography>
 
         <View style={styles.companyTitleRow}>
           <Typography variant="title3" color={stockColor}>
-            {formatNumber(-2.3, { minimumFractionDigits: 2 })}
+            {lastOpenCloseValues?.priceChange
+              ? formatNumber(lastOpenCloseValues.priceChange, {
+                  minimumFractionDigits: 2,
+                })
+              : '-'}
           </Typography>
 
-          <Typography
-            variant="title3"
-            color={stockColor}
-            style={styles.companyTitleLabel}>
-            <Icon
-              name={isSuccessedStocks ? 'md-arrow-up' : 'md-arrow-down'}
-              size={18}
+          {!!lastOpenCloseValues?.persontagePriceChange && (
+            <Typography
+              variant="title3"
               color={stockColor}
-            />{' '}
-            1.5%
-          </Typography>
+              style={styles.companyTitleLabel}>
+              <Icon
+                name={isLastClosePriceGrown ? 'md-arrow-up' : 'md-arrow-down'}
+                size={18}
+                color={stockColor}
+              />
+              {lastOpenCloseValues.persontagePriceChange}
+            </Typography>
+          )}
         </View>
 
         {/* Chart section */}
@@ -180,7 +195,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         </Section>
 
         {/* Tags section */}
-        {tickerCompany?.tags && (
+        {!!tickerCompany?.tags && (
           <Section
             title="Tags"
             contentContainerStyle={[
@@ -199,7 +214,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         )}
 
         {/* Related Stocks section */}
-        {tickerCompany?.similar && (
+        {!!tickerCompany?.similar && (
           <Section
             title="Related Stocks"
             contentContainerStyle={[
