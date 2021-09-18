@@ -30,7 +30,7 @@ import API from 'src/services/API';
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
 
 // Utils
-import { formatNumber } from 'src/utils/formatting';
+import { formatPhoneNumber, formatNumber } from 'src/utils/formatting';
 
 export type StockCompanyDetailsProps = StackScreenProps<
   StockCompaniesStackParamList,
@@ -70,7 +70,12 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         ? [tickerCompany.hq_address, tickerCompany.hq_country].join(', ')
         : '-',
     },
-    { key: 'phone', value: tickerCompany?.phone ?? '-' },
+    {
+      key: 'phone',
+      value: tickerCompany?.phone
+        ? formatPhoneNumber(tickerCompany.phone)
+        : '-',
+    },
   ];
 
   // Get data for stocks chart

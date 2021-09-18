@@ -1,3 +1,6 @@
+import parsePhoneNumber from 'libphonenumber-js';
+
+// Types
 export type FormattingNumberOptions = {
   locale?: string;
   currency?: string;
@@ -29,4 +32,10 @@ export const formatNumber = (
   }
 
   return '-';
+};
+
+export const formatPhoneNumber = (phoneNumberToFormat: string | number) => {
+  const formatedPhoneNumber = parsePhoneNumber(phoneNumberToFormat.toString());
+
+  return formatedPhoneNumber?.formatInternational() ?? phoneNumberToFormat;
 };
