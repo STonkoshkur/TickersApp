@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { TouchableOpacity } from 'react-native';
 
 // Components
 import AppHeader from 'src/components/Navigation/AppHeader';
@@ -30,13 +31,19 @@ const StockCompaniesStack: FC = () => {
       screenOptions={{
         header: ({ navigation }) => (
           <AppHeader>
-            <SearchBar
-              editable={false}
-              placeholder="Search symbols or companies"
-              onPressIn={() => {
+            {/* TextInput onPressIn() handler doesn't work with editable={false} on Android.
+            TouchableOpacity wrapper is used instead of TextInput onPressIn(). */}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
                 navigation.push(Routes.StockCompaniesSearchList);
-              }}
-            />
+              }}>
+              <SearchBar
+                editable={false}
+                placeholder="Search symbols or companies"
+                pointerEvents="none"
+              />
+            </TouchableOpacity>
           </AppHeader>
         ),
       }}>

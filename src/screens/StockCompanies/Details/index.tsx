@@ -126,8 +126,12 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
             : '-'}
         </Typography>
 
+        {/* Price value changes section */}
         <View style={styles.companyTitleRow}>
-          <Typography variant="title3" color={stockColor}>
+          <Typography
+            variant="title3"
+            color={stockColor}
+            style={styles.companyTitleLabel}>
             {lastOpenCloseValues?.priceChange
               ? formatNumber(lastOpenCloseValues.priceChange, {
                   minimumFractionDigits: 2,
@@ -141,11 +145,11 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
               color={stockColor}
               style={styles.companyTitleLabel}>
               <Icon
-                name={isLastClosePriceGrown ? 'md-arrow-up' : 'md-arrow-down'}
                 size={18}
                 color={stockColor}
+                name={isLastClosePriceGrown ? 'md-arrow-up' : 'md-arrow-down'}
               />
-              {lastOpenCloseValues.persontagePriceChange}
+              {`${Math.abs(lastOpenCloseValues.persontagePriceChange)}%`}
             </Typography>
           )}
         </View>
@@ -167,8 +171,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
               <Typography
                 key={label}
                 variant="callout"
-                style={styles.calloutTextLine}
-                numberOfLines={1}>
+                style={styles.calloutTextLine}>
                 {`${label}: `}
                 <Typography variant="callout" weight="medium">
                   {value}
@@ -228,6 +231,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
             ]}>
             {tickerCompany.similar.map((similarSymbol, index) => (
               <Chip
+                key={similarSymbol}
                 color={index % 2 ? Colors.Emerald : Colors.Cinnabar}
                 onPress={handleRelatedStockPress(similarSymbol)}>
                 {similarSymbol}
