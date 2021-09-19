@@ -44,12 +44,13 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
   const { companySymbol } = route.params;
 
   const { data: tickerCompany } = useQuery(
-    ['company', companySymbol],
-    () => API.tickers.getTickerDetails(companySymbol),
-    {
-      staleTime: 5 * 60 * 1000, // 5 min
-    },
-  );
+      ['company', companySymbol],
+      () => API.tickers.getTickerDetails(companySymbol),
+      {
+        retry: false, // Polygon.io trial project allows only 5 requests per minute
+        staleTime: 5 * 60 * 1000, // 5 min
+      },
+    );
 
   // Mapped company data to display
   const aboutCompanyValues = [
@@ -122,7 +123,9 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 
         <Typography variant="title1" weight="medium" style={styles.priceRow}>
           {lastOpenCloseValues?.closePrice
-            ? formatNumber(lastOpenCloseValues.closePrice, { currency: 'usd' })
+            ? formatNumber(lastOpenCloseValues.closePrice, {
+                currency: 'usd',
+              })
             : '-'}
         </Typography>
 
@@ -134,6 +137,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
             style={styles.companyTitleLabel}>
             {lastOpenCloseValues?.priceChange
               ? formatNumber(lastOpenCloseValues.priceChange, {
+                  prefixSymbol: true,
                   minimumFractionDigits: 2,
                 })
               : '-'}
@@ -162,82 +166,82 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
           width={Dimensions.get('window').width - Measurements.huge}
         />
 
-        {/* General company info section */}
-        <Section
-          title={`About ${tickerCompany?.symbol ?? companySymbol}`}
-          contentContainerStyle={GeneralStyles.horisontalAlign}>
-          <View style={styles.columnX2}>
-            {aboutCompanyValues.map(({ label, value }) => (
+            {/* General company info section */}
+            <Section
+              title={`About ${tickerCompany?.symbol ?? companySymbol}`}
+              contentContainerStyle={GeneralStyles.horisontalAlign}>
+              <View style={styles.columnX2}>
+                {aboutCompanyValues.map(({ label, value }) => (
+                  <Typography
+                    key={label}
+                    variant="callout"
+                    style={styles.calloutTextLine}>
+                    {`${label}: `}
+                    <Typography variant="callout" weight="medium">
+                      {value}
+                    </Typography>
+                  </Typography>
+                ))}
+              </View>
+
+              <View style={styles.column}>
+                {companyContactsValues.map(({ key, value }) => (
+                  <Typography
+                    key={key}
+                    variant="callout"
+                    style={styles.contactsText}>
+                    {value}
+                  </Typography>
+                ))}
+              </View>
+            </Section>
+
+            {/* Company description section */}
+            <Section title="Description">
               <Typography
-                key={label}
                 variant="callout"
-                style={styles.calloutTextLine}>
-                {`${label}: `}
-                <Typography variant="callout" weight="medium">
-                  {value}
-                </Typography>
+                weight="medium"
+                style={styles.descriptionBodyText}>
+                {tickerCompany?.description || '-'}
               </Typography>
-            ))}
-          </View>
+            </Section>
 
-          <View style={styles.column}>
-            {companyContactsValues.map(({ key, value }) => (
-              <Typography
-                key={key}
-                variant="callout"
-                style={styles.contactsText}>
-                {value}
-              </Typography>
-            ))}
-          </View>
-        </Section>
+            {/* Tags section */}
+            {!!tickerCompany?.tags && (
+              <Section
+                title="Tags"
+                contentContainerStyle={[
+                  GeneralStyles.horisontalAlign,
+                  GeneralStyles.flexWrap,
+                ]}>
+                {tickerCompany.tags.map((tag, index) => (
+                  <Chip
+                    key={tag}
+                    color={index % 2 ? Colors.PictonBlue : Colors.DarkOrchid}
+                    disabled>
+                    {tag}
+                  </Chip>
+                ))}
+              </Section>
+            )}
 
-        {/* Company description section */}
-        <Section title="Description">
-          <Typography
-            variant="callout"
-            weight="medium"
-            style={styles.descriptionBodyText}>
-            {tickerCompany?.description || '-'}
-          </Typography>
-        </Section>
-
-        {/* Tags section */}
-        {!!tickerCompany?.tags && (
-          <Section
-            title="Tags"
-            contentContainerStyle={[
-              GeneralStyles.horisontalAlign,
-              GeneralStyles.flexWrap,
-            ]}>
-            {tickerCompany.tags.map((tag, index) => (
-              <Chip
-                key={tag}
-                color={index % 2 ? Colors.PictonBlue : Colors.DarkOrchid}
-                disabled>
-                {tag}
-              </Chip>
-            ))}
-          </Section>
-        )}
-
-        {/* Related Stocks section */}
-        {!!tickerCompany?.similar && (
-          <Section
-            title="Related Stocks"
-            contentContainerStyle={[
-              GeneralStyles.horisontalAlign,
-              GeneralStyles.flexWrap,
-            ]}>
-            {tickerCompany.similar.map((similarSymbol, index) => (
-              <Chip
-                key={similarSymbol}
-                color={index % 2 ? Colors.Emerald : Colors.Cinnabar}
-                onPress={handleRelatedStockPress(similarSymbol)}>
-                {similarSymbol}
-              </Chip>
-            ))}
-          </Section>
+            {/* Related Stocks section */}
+            {!!tickerCompany?.similar && (
+              <Section
+                title="Related Stocks"
+                contentContainerStyle={[
+                  GeneralStyles.horisontalAlign,
+                  GeneralStyles.flexWrap,
+                ]}>
+                {tickerCompany.similar.map((similarSymbol, index) => (
+                  <Chip
+                    key={similarSymbol}
+                    color={index % 2 ? Colors.Emerald : Colors.Cinnabar}
+                    onPress={handleRelatedStockPress(similarSymbol)}>
+                    {similarSymbol}
+                  </Chip>
+                ))}
+              </Section>
         )}
       </ScrollView>
     </SafeAreaView>

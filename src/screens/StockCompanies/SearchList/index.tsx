@@ -48,6 +48,7 @@ const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
     ['search/tickers', debouncedSearch],
     () => API.tickers.getUsStockTickers(debouncedSearch ?? ''),
     {
+      retry: false, // Polygon.io trial project allows only 5 requests per minute
       staleTime: 1000 * 60 * 60 * 1, // 1 hour
       enabled: !!debouncedSearch,
     },

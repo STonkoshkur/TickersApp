@@ -26,6 +26,7 @@ export const useSymbolAggregatedStocks = (stocksTicker: string) => {
         to: toDate,
       }),
     {
+      retry: false, // Polygon.io trial project allows only 5 requests per minute
       staleTime: 60 * 60 * 1000, // 1 hour
       onError: () => {},
     },
@@ -45,20 +46,26 @@ export const useSymbolAggregatedStocks = (stocksTicker: string) => {
         ] >= symbolStocksAggregatesForChart[0]
       : true;
 
+  // Calculate price changes values
   const lastOpenCloseResult =
-    symbolAggregatesStocksResults.length >= 1
-      ? symbolAggregatesStocksResults[symbolAggregatesStocksResults.length - 1]
-      : null;
+    symbolAggregatesStocksResults[symbolAggregatesStocksResults.length - 1] ??
+    null;
+  const previousOpenCloseResult =
+    symbolAggregatesStocksResults[symbolAggregatesStocksResults.length - 2] ??
+    null;
 
   const lastOpenCloseValues = {
+    prevClosePrice: previousOpenCloseResult?.c,
     openPrice: lastOpenCloseResult?.o,
     closePrice: lastOpenCloseResult?.c,
-    priceChange: lastOpenCloseResult
-      ? lastOpenCloseResult.c - lastOpenCloseResult.o
-      : null,
-    persontagePriceChange: lastOpenCloseResult
-      ? percentageDiff(lastOpenCloseResult.o, lastOpenCloseResult.c)
-      : null,
+    priceChange:
+      lastOpenCloseResult && previousOpenCloseResult
+        ? lastOpenCloseResult.c - previousOpenCloseResult.c
+        : null,
+    persontagePriceChange:
+      lastOpenCloseResult && previousOpenCloseResult
+        ? percentageDiff(previousOpenCloseResult.c, lastOpenCloseResult.c)
+        : null,
   };
 
   return {
