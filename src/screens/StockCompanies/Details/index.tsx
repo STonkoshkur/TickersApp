@@ -43,7 +43,8 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 }) => {
   const { companySymbol } = route.params;
 
-  const { data: tickerCompany } = useQuery(
+  const { data: tickerCompany, isError: isTickerCompanyLoadingFailed } =
+    useQuery(
       ['company', companySymbol],
       () => API.tickers.getTickerDetails(companySymbol),
       {
@@ -51,6 +52,8 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         staleTime: 5 * 60 * 1000, // 5 min
       },
     );
+
+  const shouldNotFoundBeShown = isTickerCompanyLoadingFailed && !tickerCompany;
 
   // Mapped company data to display
   const aboutCompanyValues = [
@@ -166,6 +169,14 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
           width={Dimensions.get('window').width - Measurements.huge}
         />
 
+        {shouldNotFoundBeShown ? (
+          <Section title="Company loading error">
+            <Typography variant="callout" weight="medium">
+              Unable to load ticker company details
+            </Typography>
+          </Section>
+        ) : (
+          <>
             {/* General company info section */}
             <Section
               title={`About ${tickerCompany?.symbol ?? companySymbol}`}
@@ -242,6 +253,8 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
                   </Chip>
                 ))}
               </Section>
+            )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>
