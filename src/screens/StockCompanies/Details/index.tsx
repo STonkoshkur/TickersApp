@@ -4,6 +4,7 @@ import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 // Components
 import Chip from 'src/components/Chip';
 import Section from './components/Section';
+import MapView from 'src/components/MapView';
 import LineChart from 'src/components/LineChart';
 import Typography from 'src/components/Typography';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,7 +22,7 @@ import useSymbolAggregatedStocks from 'src/hooks/entities/useSymbolAggregatedSto
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
 
 // Utils
-import { getLineChartWidth } from './helpers/chart';
+import { getLineChartWidth, getMapWidth } from './helpers/chart';
 import { formatPhoneNumber, formatNumber } from 'src/utils/formatting';
 
 export type StockCompanyDetailsProps = StackScreenProps<
@@ -165,33 +166,39 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
         ) : (
           <>
             {/* General company info section */}
-            <Section
-              title={`About ${tickerCompany?.symbol ?? companySymbol}`}
-              contentContainerStyle={GeneralStyles.horisontalAlign}>
-              <View style={styles.columnX2}>
-                {aboutCompanyValues.map(({ label, value }) => (
-                  <Typography
-                    key={label}
-                    variant="callout"
-                    style={styles.calloutTextLine}>
-                    {`${label}: `}
-                    <Typography variant="callout" weight="medium">
+            <Section title={`About ${tickerCompany?.symbol ?? companySymbol}`}>
+              <View style={GeneralStyles.horisontalAlign}>
+                <View style={styles.columnX2}>
+                  {aboutCompanyValues.map(({ label, value }) => (
+                    <Typography
+                      key={label}
+                      variant="callout"
+                      style={styles.calloutTextLine}>
+                      {`${label}: `}
+                      <Typography variant="callout" weight="medium">
+                        {value}
+                      </Typography>
+                    </Typography>
+                  ))}
+                </View>
+
+                <View style={styles.column}>
+                  {companyContactsValues.map(({ key, value }) => (
+                    <Typography
+                      key={key}
+                      variant="callout"
+                      style={styles.contactsText}>
                       {value}
                     </Typography>
-                  </Typography>
-                ))}
+                  ))}
+                </View>
               </View>
-
-              <View style={styles.column}>
-                {companyContactsValues.map(({ key, value }) => (
-                  <Typography
-                    key={key}
-                    variant="callout"
-                    style={styles.contactsText}>
-                    {value}
-                  </Typography>
-                ))}
-              </View>
+              {!!tickerCompany && (
+                <MapView
+                  address={`${tickerCompany.name}, ${tickerCompany.hq_address}`}
+                  containerStyle={styles.mapContainer}
+                />
+              )}
             </Section>
 
             {/* Company description section */}
@@ -277,6 +284,10 @@ const styles = StyleSheet.create({
   },
   descriptionBodyText: {
     lineHeight: 18,
+  },
+  mapContainer: {
+    marginTop: 20,
+    width: getMapWidth(Measurements.huge),
   },
 });
 
