@@ -21,10 +21,7 @@ import Routes from 'src/navigation/routes';
 
 // Hooks
 import useDebounce from 'src/hooks/utils/useDebounce';
-import { useQuery } from 'react-query';
-
-// Services
-import API from 'src/services/API';
+import useTickersSearch from 'src/hooks/entities/useTickersSearch';
 
 // Entities
 import { Ticker } from 'src/entities/ticker';
@@ -44,17 +41,12 @@ const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 350);
 
-  const { data: paginatedTickers } = useQuery(
-    ['search/tickers', debouncedSearch],
-    () => API.tickers.getUsStockTickers(debouncedSearch ?? ''),
-    {
-      retry: false, // Polygon.io trial project allows only 5 requests per minute
-      staleTime: 1000 * 60 * 60 * 1, // 1 hour
-      enabled: !!debouncedSearch,
-    },
-  );
+  const { tickers, isTickersLoading } = useTickersSearch(debouncedSearch);
 
-  const tickersList = paginatedTickers?.results ?? [];
+  const tickersListToShown = tickers ?? [];
+
+  // Hide 'Not Found' component when data is loading or search value is empty
+  const shouldNotFoundBeShown = debouncedSearch && !isTickersLoading;
 
   const renderSearchedItem = ({ item }: ListRenderItemInfo<Ticker>) => {
     const { ticker: tickerSymbol, name } = item;
@@ -104,9 +96,9 @@ const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
       </AppHeader>
 
       <FlatList
-        data={tickersList}
+        data={tickersListToShown}
         renderItem={renderSearchedItem}
-        ListEmptyComponent={<ResultsNotFound />}
+        ListEmptyComponent={shouldNotFoundBeShown ? <ResultsNotFound /> : null}
         contentContainerStyle={styles.contentContainer}
       />
     </SafeAreaView>
