@@ -13,8 +13,11 @@ import SearchBar from 'src/components/SearchBar';
 import Typography from 'src/components/Typography';
 import AppHeader from 'src/components/Navigation/AppHeader';
 import ResultsNotFound from './components/ResultsNotFound';
+import AppHeaderAction from 'src/components/Navigation/AppHeaderAction';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 // Navigation
+import { DrawerActions } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { StockCompaniesStackParamList } from 'src/navigation/stacks/StockCompanies';
 import Routes from 'src/navigation/routes';
@@ -84,6 +87,13 @@ const StockCompaniesSearchList: FC<StockCompaniesSearchListProps> = ({
   return (
     <SafeAreaView style={GeneralStyles.pageContainer}>
       <AppHeader withoutTopOffcet>
+        <AppHeaderAction
+          onPress={() => {
+            navigation.dispatch(DrawerActions.openDrawer());
+          }}>
+          <Icon name="md-menu-sharp" size={22} color={Colors.Manatee} />
+        </AppHeaderAction>
+
         <SearchBar
           autoFocus
           autoCorrect={false}

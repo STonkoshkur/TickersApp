@@ -6,7 +6,8 @@ import TextInput, { InputProps } from 'src/components/Input';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // Layout
-import { Colors, Measurements } from 'src/layout';
+import { APP_HEADER_HEIGHT } from 'src/components/Navigation/AppHeader';
+import { Colors } from 'src/layout';
 
 export type SearchBarProps = Omit<
   InputProps,
@@ -30,16 +31,21 @@ const SearchBar: FC<SearchBarProps> = ({
     </TouchableOpacity>
   );
 
-  return <TextInput {...props} renderLeftComponent={renderLeftComponent} />;
+  return (
+    <TextInput
+      placeholderTextColor={Colors.Manatee}
+      {...props}
+      renderLeftComponent={renderLeftComponent}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 26,
-    width: 26,
-    marginRight: Measurements.base,
+    height: APP_HEADER_HEIGHT,
+    width: 46,
   },
 });
 
