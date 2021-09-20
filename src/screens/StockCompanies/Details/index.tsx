@@ -1,11 +1,5 @@
 import React, { FC } from 'react';
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 
 // Components
 import Chip from 'src/components/Chip';
@@ -27,6 +21,7 @@ import useSymbolAggregatedStocks from 'src/hooks/entities/useSymbolAggregatedSto
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
 
 // Utils
+import { getLineChartWidth } from './helpers/chart';
 import { formatPhoneNumber, formatNumber } from 'src/utils/formatting';
 
 export type StockCompanyDetailsProps = StackScreenProps<
@@ -111,7 +106,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
             {tickerCompany?.symbol ?? companySymbol}
           </Typography>
 
-          {tickerCompany?.name && (
+          {!!tickerCompany?.name && (
             <Typography variant="title3">{tickerCompany.name}</Typography>
           )}
         </View>
@@ -158,7 +153,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
           data={symbolStocksAggregatesForChart}
           color={chartColor}
           height={120}
-          width={Dimensions.get('window').width - Measurements.huge}
+          width={getLineChartWidth(Measurements.huge)}
         />
 
         {shouldNotFoundBeShown ? (
@@ -201,10 +196,7 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 
             {/* Company description section */}
             <Section title="Description">
-              <Typography
-                variant="callout"
-                weight="medium"
-                style={styles.descriptionBodyText}>
+              <Typography variant="callout" style={styles.descriptionBodyText}>
                 {tickerCompany?.description || '-'}
               </Typography>
             </Section>
