@@ -5,7 +5,7 @@ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Layout
-import { Measurements, Colors } from 'src/layout';
+import { Colors } from 'src/layout';
 
 export type AppHeaderType = {
   withoutTopOffcet?: boolean;
@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     minHeight: APP_HEADER_HEIGHT,
-    paddingHorizontal: Measurements.double,
     borderBottomWidth: 1,
     borderBottomColor: Colors.Solitude,
     backgroundColor: Colors.White,
