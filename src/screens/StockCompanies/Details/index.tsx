@@ -7,6 +7,7 @@ import Section from './components/Section';
 import MapView from 'src/components/MapView';
 import LineChart from 'src/components/LineChart';
 import Typography from 'src/components/Typography';
+import LayoutSkeleton from './components/Skeleton';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // Navigation
@@ -39,8 +40,10 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
   const {
     symbolCompany: tickerCompany,
     isCompanyLoadingFailed: isTickerCompanyLoadingFailed,
+    isLoading: isTickerDetailsLoading,
   } = useSymbolCompanyDetails(companySymbol);
 
+  const shouldLayoutSkeletonBeShown = isTickerDetailsLoading && !tickerCompany;
   const shouldNotFoundBeShown = isTickerCompanyLoadingFailed && !tickerCompany;
 
   // Mapped company data to display
@@ -94,6 +97,17 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
       companySymbol: relatedSymbol,
     });
   };
+
+  // Show layout skeleton when company data is loading
+  if (shouldLayoutSkeletonBeShown) {
+    return (
+      <SafeAreaView style={GeneralStyles.pageContainer}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <LayoutSkeleton />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={GeneralStyles.pageContainer}>
