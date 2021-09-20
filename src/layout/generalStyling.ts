@@ -9,6 +9,9 @@ const generalStyles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
+  flexWrap: {
+    flexWrap: 'wrap',
+  },
 } as const;
 
 export default generalStyles;
