@@ -20,11 +20,8 @@ import { StockCompaniesStackParamList } from 'src/navigation/stacks/StockCompani
 import Routes from 'src/navigation/routes';
 
 // Hooks
-import { useQuery } from 'react-query';
+import useSymbolCompanyDetails from 'src/hooks/entities/useSymbolCompanyDetails';
 import useSymbolAggregatedStocks from 'src/hooks/entities/useSymbolAggregatedStocks';
-
-// Services
-import API from 'src/services/API';
 
 // Layout
 import { GeneralStyles, Measurements, Colors } from 'src/layout';
@@ -43,15 +40,10 @@ const StockCompanyDetails: FC<StockCompanyDetailsProps> = ({
 }) => {
   const { companySymbol } = route.params;
 
-  const { data: tickerCompany, isError: isTickerCompanyLoadingFailed } =
-    useQuery(
-      ['company', companySymbol],
-      () => API.tickers.getTickerDetails(companySymbol),
-      {
-        retry: false, // Polygon.io trial project allows only 5 requests per minute
-        staleTime: 5 * 60 * 1000, // 5 min
-      },
-    );
+  const {
+    symbolCompany: tickerCompany,
+    isCompanyLoadingFailed: isTickerCompanyLoadingFailed,
+  } = useSymbolCompanyDetails(companySymbol);
 
   const shouldNotFoundBeShown = isTickerCompanyLoadingFailed && !tickerCompany;
 
