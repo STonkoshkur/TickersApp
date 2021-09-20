@@ -1,5 +1,5 @@
 import React, { FC, memo, PropsWithChildren } from 'react';
-import { Text, TextProps } from 'react-native';
+import { Text, TextProps, StyleSheet } from 'react-native';
 
 // Styling
 import { Colors } from 'src/layout';
@@ -56,6 +56,7 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({
     <Text
       {...props}
       style={[
+        styles.detaultFont,
         { fontSize },
         !!weight && { fontWeight: TypographyWeights[weight] },
         { color: color ?? Colors.Black },
@@ -65,5 +66,11 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({
     </Text>
   );
 };
+
+const styles = StyleSheet.create({
+  detaultFont: {
+    fontFamily: 'Roboto',
+  },
+});
 
 export default memo(Typography);
