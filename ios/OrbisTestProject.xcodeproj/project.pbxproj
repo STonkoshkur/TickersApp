@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* OrbisTestProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OrbisTestProjectTests.m */; };
+		11B010C84B3446A6A6A1FAED /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B5452507C46038B657F6B /* Roboto-Regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		6172F2D35A4C3AA820D92908 /* libPods-OrbisTestProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-OrbisTestProject.a */; };
+		75E58B08080144F9A8E869BB /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB20492C85D04326A50A748C /* Roboto-Medium.ttf */; };
 		7EF68E3733C33B6898317E18 /* libPods-OrbisTestProject-OrbisTestProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-OrbisTestProject-OrbisTestProjectTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B0766A760208449D89664656 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 181A3D1DC5504D05934142F8 /* Roboto-Bold.ttf */; };
+		F06369CF955E4E7CAA76CC36 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D05B5A0CB1546AC97CD24AB /* Roboto-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,13 +40,17 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OrbisTestProject/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OrbisTestProject/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OrbisTestProject/main.m; sourceTree = "<group>"; };
+		181A3D1DC5504D05934142F8 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-OrbisTestProject-OrbisTestProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrbisTestProject-OrbisTestProjectTests.release.xcconfig"; path = "Target Support Files/Pods-OrbisTestProject-OrbisTestProjectTests/Pods-OrbisTestProject-OrbisTestProjectTests.release.xcconfig"; sourceTree = "<group>"; };
+		3D05B5A0CB1546AC97CD24AB /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-OrbisTestProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrbisTestProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-OrbisTestProject-OrbisTestProjectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrbisTestProject-OrbisTestProjectTests.debug.xcconfig"; path = "Target Support Files/Pods-OrbisTestProject-OrbisTestProjectTests/Pods-OrbisTestProject-OrbisTestProjectTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OrbisTestProject/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-OrbisTestProject-OrbisTestProjectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrbisTestProject-OrbisTestProjectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC2B5452507C46038B657F6B /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		C0A881CF5CF3F2B244570E2A /* Pods-OrbisTestProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrbisTestProject.debug.xcconfig"; path = "Target Support Files/Pods-OrbisTestProject/Pods-OrbisTestProject.debug.xcconfig"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-OrbisTestProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrbisTestProject.release.xcconfig"; path = "Target Support Files/Pods-OrbisTestProject/Pods-OrbisTestProject.release.xcconfig"; sourceTree = "<group>"; };
+		EB20492C85D04326A50A748C /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -122,6 +130,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E233CBF5F47BEE60B243DCF8 /* Pods */,
+				E99D85B216F64468B0798F90 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +156,18 @@
 			);
 			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E99D85B216F64468B0798F90 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				181A3D1DC5504D05934142F8 /* Roboto-Bold.ttf */,
+				3D05B5A0CB1546AC97CD24AB /* Roboto-Light.ttf */,
+				EB20492C85D04326A50A748C /* Roboto-Medium.ttf */,
+				BC2B5452507C46038B657F6B /* Roboto-Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +266,10 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				B0766A760208449D89664656 /* Roboto-Bold.ttf in Resources */,
+				F06369CF955E4E7CAA76CC36 /* Roboto-Light.ttf in Resources */,
+				75E58B08080144F9A8E869BB /* Roboto-Medium.ttf in Resources */,
+				11B010C84B3446A6A6A1FAED /* Roboto-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
